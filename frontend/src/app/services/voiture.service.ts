@@ -23,7 +23,12 @@ export class VoitureService {
   addVoiture(voiture: Voiture): Observable<Voiture> {
     return this.http.post<Voiture>(`${this.apiUrl}/voitures`, voiture);
   }
-
+  updateVoitureById(id: string, voiture: Voiture) {
+    return this.http.patch< Voiture >(
+      `${this.apiUrl}/${id}`,
+      voiture
+    );
+  }
   calculateTime(distance: number, model: string): Observable<any> {
     return this.http.post<any>(`${this.apiUrl}/calculate-time`, { distance, model });
   }

@@ -1,0 +1,104 @@
+<div class="container mt-4">
+  <div class="card shadow-lg p-4">
+    <h2 class="text-center">Add New Voiture</h2>
+
+    <form [formGroup]="voitureForm" (ngSubmit)="addVoiture()">
+      <div class="mb-3">
+        <label for="model" class="form-label">Model</label>
+        <input
+          type="text"
+          id="model"
+          class="form-control"
+          formControlName="model"
+          [ngClass]="{
+            'is-invalid':
+              voitureForm.get('model')?.invalid &&
+              voitureForm.get('model')?.touched
+          }"
+        />
+        <div
+          class="invalid-feedback"
+          *ngIf="
+            voitureForm.get('model')?.invalid &&
+            voitureForm.get('model')?.touched
+          "
+        >
+          Model is required
+        </div>
+      </div>
+
+      <!-- kmH (Speed) -->
+      <div class="mb-3">
+        <label for="kmH" class="form-label">KmH</label>
+        <input
+          type="number"
+          id="kmH"
+          class="form-control"
+          formControlName="kmH"
+          [ngClass]="{
+            'is-invalid':
+              voitureForm.get('kmH')?.invalid && voitureForm.get('kmH')?.touched
+          }"
+        />
+        <div
+          class="invalid-feedback"
+          *ngIf="
+            voitureForm.get('kmH')?.invalid && voitureForm.get('kmH')?.touched
+          "
+        >
+          Speed is required
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Caracteristiques</label>
+        <div
+          *ngFor="let item of caracteristique.controls; let i = index"
+          class="input-group mb-2"
+        >
+          <input
+            type="text"
+            class="form-control"
+            [formControlName]="i"
+            [ngClass]="{
+              'is-invalid':
+                caracteristique.at(i).invalid && caracteristique.at(i).touched
+            }"
+          />
+          <button
+            type="button"
+            class="btn btn-danger"
+            (click)="deleteCaracteristique(i)"
+          ></button>
+          <div
+            class="invalid-feedback"
+            *ngIf="
+              caracteristique.at(i).invalid && caracteristique.at(i).touched
+            "
+          >
+            caracteristique is required.
+          </div>
+        </div>
+        <button
+          type="button"
+          class="btn btn-secondary"
+          (click)="addCaracteristique()"
+        >
+          Add caracteristique
+        </button>
+      </div>
+
+      <button
+        type="submit"
+        class="btn btn-primary w-100"
+        [disabled]="voitureForm.invalid || isSubmitting"
+      >
+        <span
+          *ngIf="isSubmitting"
+          class="spinner-border spinner-border-sm"
+        ></span>
+        Add Voiture
+      </button>
+    </form>
+  </div>
+</div>
