@@ -11,12 +11,14 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Voiture } from '../../../models/voiture..model';
 import { CommonModule } from '@angular/common';
 import { ReplaySubject, takeUntil } from 'rxjs';
+import { HttpClientModule } from '@angular/common/http';
 
 @Component({
   selector: 'app-add-voiture',
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, HttpClientModule],
   templateUrl: './add-voiture.component.html',
   styleUrl: './add-voiture.component.scss',
+  providers: [VoitureService],
 })
 export class AddVoitureComponent {
   voitureForm!: FormGroup;
@@ -59,16 +61,28 @@ export class AddVoitureComponent {
         },
       });
   }
-  get caracteristique(): FormArray {
-    return this.voitureForm.get('caracteristique') as FormArray;
+  get caracteristiques(): FormArray {
+    return this.voitureForm.get('caracteristiques') as FormArray;
   }
 
-  addCaracteristique(): void {
-    this.caracteristique.push(this.fb.control('', Validators.required));
+  addCaracteristique(char?: any): void {
+    if (this.caracteristiques.valid) {
+      this.caracteristiques.push(
+        this.fb.group({
+          nom: ['', [Validators.required]],
+          valeur: ['', [Validators.required]],
+        })
+      );
+      if (char) {
+        this.caracteristiques.controls[
+          this.caracteristiques.length - 1
+        ].patchValue(char);
+      }
+    }
   }
 
   deleteCaracteristique(index: number): void {
-    this.caracteristique.removeAt(index);
+    this.caracteristiques.removeAt(index);
   }
 
   patchValueIntoForm(data: Voiture) {
@@ -76,15 +90,16 @@ export class AddVoitureComponent {
       model: data.model,
       kmH: data.kmH,
     });
-    this.caracteristique.clear();
+    this.caracteristiques.clear();
     if (data.caracteristiques && data.caracteristiques.length) {
       data.caracteristiques.forEach((char) => {
-        this.caracteristique.push(this.fb.control(char, Validators.required));
+        this.addCaracteristique(char);
       });
     }
   }
 
   addVoiture() {
+    console.log('form', this.voitureForm);
     if (this.voitureForm.invalid) {
       this.voitureForm.markAllAsTouched();
     } else {
@@ -94,7 +109,9 @@ export class AddVoitureComponent {
           .updateVoitureById(this.id, voitureForm)
           .pipe(takeUntil(this.destroyed$))
           .subscribe({
-            next: (result) => {},
+            next: (result) => {
+              this.id = result._id;
+            },
             error: (error: any) => {},
           });
       } else {

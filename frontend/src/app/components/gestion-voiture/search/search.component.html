@@ -1,0 +1,54 @@
+<div class="container mt-4">
+  <div class="card shadow-lg p-4">
+    <form [formGroup]="searchForm" (ngSubmit)="search()">
+      <div class="mb-3">
+        <label for="model" class="form-label">Modèle de voiture</label>
+        <select id="model" class="form-select" formControlName="model">
+          <option value="">Sélectionner un modèle</option>
+          <option *ngFor="let car of optionsVoiture" [value]="car.model">
+            {{ car.model }}
+          </option>
+        </select>
+        <div
+          *ngIf="
+            searchForm.get('model')?.invalid && searchForm.get('model')?.touched
+          "
+          class="text-danger"
+        >
+          Veuillez sélectionner un modèle.
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <label for="distance" class="form-label">Distance en Km</label>
+        <input
+          type="number"
+          id="distance"
+          class="form-control"
+          formControlName="distance"
+        />
+        <div
+          *ngIf="
+            searchForm.get('distance')?.invalid &&
+            searchForm.get('distance')?.touched
+          "
+          class="text-danger"
+        >
+          La distance doit être un nombre valide et supérieur à 0.
+        </div>
+      </div>
+
+      <button
+        type="submit"
+        class="btn btn-primary"
+        [disabled]="searchForm.invalid"
+      >
+        Calculer la vitesse
+      </button>
+    </form>
+
+    <div *ngIf="temps" class="alert alert-success mt-3">
+      {{ temps }}
+    </div>
+  </div>
+</div>

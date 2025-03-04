@@ -27,7 +27,6 @@
         </div>
       </div>
 
-      <!-- kmH (Speed) -->
       <div class="mb-3">
         <label for="kmH" class="form-label">KmH</label>
         <input
@@ -51,34 +50,76 @@
       </div>
 
       <div class="mb-3">
-        <label class="form-label">Caracteristiques</label>
-        <div
-          *ngFor="let item of caracteristique.controls; let i = index"
-          class="input-group mb-2"
-        >
-          <input
-            type="text"
-            class="form-control"
-            [formControlName]="i"
-            [ngClass]="{
-              'is-invalid':
-                caracteristique.at(i).invalid && caracteristique.at(i).touched
-            }"
-          />
-          <button
-            type="button"
-            class="btn btn-danger"
-            (click)="deleteCaracteristique(i)"
-          ></button>
-          <div
-            class="invalid-feedback"
-            *ngIf="
-              caracteristique.at(i).invalid && caracteristique.at(i).touched
-            "
-          >
-            caracteristique is required.
-          </div>
+        <div class="my-2">
+          <label class="form-label">Caracteristiques</label>
         </div>
+
+        <ng-container formArrayName="caracteristiques">
+          <div
+            *ngFor="let item of caracteristiques.controls; let i = index"
+            [formGroupName]="i"
+            class="input-group mb-2 row align-items-center"
+          >
+            <div class="col-12 col-md-5 mb-3">
+              <label for="nom" class="form-label">Nom</label>
+
+              <input
+                type="text"
+                id="nom"
+                class="form-control"
+                formControlName="nom"
+                [ngClass]="
+                  item.get('nom')?.invalid &&
+                  (item.get('nom')?.touched || item.get('nom')?.dirty)
+                    ? 'ng-invalid ng-dirty'
+                    : ''
+                "
+              />
+              <div
+                class="invalid-feedback"
+                *ngIf="item.get('nom')?.invalid && item.get('nom')?.touched"
+              >
+                nom is required
+              </div>
+            </div>
+
+            <div class="col-12 col-md-5 mb-3">
+              <label for="valeur" class="form-label">Valeur</label>
+
+              <input
+                type="text"
+                id="valeur"
+                class="form-control"
+                formControlName="valeur"
+                [ngClass]="
+                  item.get('valeur')?.invalid &&
+                  (item.get('valeur')?.touched || item.get('valeur')?.dirty)
+                    ? 'ng-invalid ng-dirty'
+                    : ''
+                "
+              />
+              <div
+                class="invalid-feedback"
+                *ngIf="
+                  item.get('valeur')?.invalid && item.get('valeur')?.touched
+                "
+              >
+                valeur is required
+              </div>
+            </div>
+
+            <div class="col-12 col-md-2 d-flex justify-content-center">
+              <button
+                type="button"
+                class="btn btn-danger mb-0"
+                (click)="deleteCaracteristique(i)"
+              >
+                Supprimer
+              </button>
+            </div>
+          </div>
+        </ng-container>
+
         <button
           type="button"
           class="btn btn-secondary"

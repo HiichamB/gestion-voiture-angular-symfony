@@ -6,16 +6,14 @@ import { Router } from '@angular/router';
   selector: 'app-card-voiture',
   imports: [],
   templateUrl: './card-voiture.component.html',
-  styleUrl: './card-voiture.component.scss'
+  styleUrl: './card-voiture.component.scss',
 })
 export class CardVoitureComponent {
-@Input() data!: Voiture
+  @Input() data!: Voiture;
 
-constructor(private router: Router) {}
+  constructor(private router: Router) {}
 
-navigateToDetail(id:string){
-  this.router.navigate([`/voitures`, id]);
-
-}
-
+  navigateToDetail(id: string) {
+    this.router.navigate([`/voiture-edit`, id]);
+  }
 }
